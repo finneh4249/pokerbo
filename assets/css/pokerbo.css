@@ -1,0 +1,27 @@
+.btn-primary{
+    --bs-btn-active-bg: #06306e !important;
+}
+body{
+    transition: all 0.5s ease-in-out;
+    color: #ececec !important;
+    background-color: #212121 !important;
+}
+#dealer-cards{
+    height:12rem;
+    align-items: center !important;
+    justify-content: center;
+    border-radius: 25px;
+    margin-top: 2rem;
+    padding-bottom: 5rem;
+}
+#dealer-cards img {
+    height: 8.75rem;
+    width: 6.25rem;
+    margin: 1rem;
+    justify-content: center;
+    transition: all 500ms ease-in-out;
+    }
+
+    .hidden{
+        display: none !important;
+    }
