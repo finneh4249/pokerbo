@@ -21,14 +21,6 @@ const PAYOUTS = new Map([
   ['clubs', 2],
   ['diamonds', 2]
 ])
-
-let message = ''
-let deck
-let canBet = true
-let drawnSuits = []
-let drawnValues = []
-const drawnHands = []
-let playerMoney = 50
 const bets = new Map([
   ['straightnup', false],
   ['twopair', false],
@@ -40,6 +32,61 @@ const bets = new Map([
   ['clubs', false],
   ['diamonds', false]
 ])
+
+const betsTest = new Map([
+  ['straightnup', {
+    bet: false,
+    payout: [{ fiveofakindflush: 601 },
+      { royalflush: 501 },
+      { straightflush: 401 },
+      { fiveofakind: 301 },
+      { fourofakind: 151 },
+      { fullhouse: 101 },
+      { flush: 51 },
+      { straight: 26 }]
+  }],
+  ['twopair', {
+    bet: false,
+    payout: 14
+  }],
+  ['3ofak', {
+    bet: false,
+    payout: 30
+  }],
+  ['pair', {
+    bet: false,
+    payout: 2
+  }],
+  ['nohand', {
+    bet: false,
+    payout: 2
+  }],
+  ['hearts', {
+    bet: false,
+    payout: 2
+  }],
+  ['spades', {
+    bet: false,
+    payout: 2
+  }],
+  ['clubs', {
+    bet: false,
+    payout: 2
+  }],
+  ['diamonds', {
+    bet: false,
+    payout: 2
+  }]
+])
+
+let message = ''
+let deck
+let canBet = true
+let drawnSuits = []
+let drawnValues = []
+const drawnHands = []
+let playerMoney = 50
+
 window.onload = function () {
   buildDeck()
   shuffleDeck()
@@ -219,8 +266,6 @@ function isValidInput (drawnValues, drawnSuits) {
       return false
     }
   }
-
-  // Check if there are any duplicate cards
   const seen = new Set()
   for (let i = 0; i < 5; i++) {
     const card = drawnValues[i] + drawnSuits[i]
