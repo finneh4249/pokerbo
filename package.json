@@ -1,0 +1,26 @@
+{
+  "name": "pokerbo",
+  "version": "1.0.0",
+  "description": "A javascript version of the PokerBo Table game formerly at Crown Casino Melbourne",
+  "main": "assets/js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finneh4249/pokerbo.git"
+  },
+  "author": "Finneh4249",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/finneh4249/pokerbo/issues"
+  },
+  "homepage": "https://github.com/finneh4249/pokerbo#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
