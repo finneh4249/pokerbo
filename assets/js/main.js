@@ -29,7 +29,6 @@ let drawnSuits = []
 let drawnValues = []
 const drawnHands = []
 let playerMoney = 50
-const playerBetValue = 0
 const bets = new Map([
   ['straightnup', false],
   ['twopair', false],
@@ -45,6 +44,9 @@ window.onload = function () {
   buildDeck()
   shuffleDeck()
   startGame()
+  if (!document.cookie) {
+    document.cookie = 'playerMoney=50'
+  }
 }
 function buildDeck () {
   deck = []
@@ -66,29 +68,16 @@ function shuffleDeck () {
 }
 
 function startGame () {
-  const initialiseEvents = () => {
+  bets.forEach(function (value, key) {
+    document.getElementById(key).addEventListener('click', function () { bet(key) })
+  })
 
-    bets.forEach(function (value, key) {
-      document.getElementById(key).addEventListener('click', function () {bet(key)})
-      })
+  document.getElementById('place-bets').addEventListener('click', placeBets)
+  document.getElementById('redraw').addEventListener('click', redrawCards)
 
-      var button = document.getElementById("place-bets");
+  document.getElementById('player-money').textContent = `$${playerMoney}`
+}
 
-// Add a click event listener to the button
-button.addEventListener("click",placeBets);
-    //   document.getElementById('place-bets').addEventListener('click', placeBets)
-    // document.getElementById('pay-bets').addEventListener('click', payBets)
-    // document.getElementById('draw').addEventListener('click', drawCards)
-    document.getElementById('redraw').addEventListener('click', redrawCards)
-    }
-
-
-  
-    initialiseEvents()
-    document.getElementById('player-money').textContent = `$${playerMoney}`
-  
-  }
- 
 function getValue (card) {
   const data = card.split('_of_')
   const value = data[0]
@@ -110,7 +99,7 @@ function redrawCards () {
     element.classList.remove('active', 'btn-success', 'disabled')
     element.classList.add('btn-primary')
     bets.set(key, false)
-    })
+  })
   for (let i = 0; i < 5; i++) {
     const cardImg = document.querySelector('img')
     document.getElementById('dealer-cards').removeChild(cardImg)
@@ -122,13 +111,12 @@ function redrawCards () {
 }
 
 function drawCards () {
-  
   function cardSound () {
-    const sound = document.getElementById("cards-sound");
+    const sound = document.getElementById('cards-sound')
     sound.load()
     sound.play()
   }
-  
+
   for (let i = 0; i < 5; i++) {
     const dealer = () => {
       cardSound()
@@ -145,75 +133,70 @@ function drawCards () {
 }
 
 function findPokerHand (drawnValues, drawnSuits) {
-  if (!isValidInput(drawnValues, drawnSuits)) {
-    message = 'Drawing Cards'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'Drawing Cards'
-  }
-  if (isRoyalFlush(drawnValues, drawnSuits)) {
-    message = 'Royal Flush'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for straight flush
-  if (isStraightFlush(drawnValues, drawnSuits)) {
-    message = 'Straight Flush'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for four of a kind
-  if (isFourOfAKind(drawnValues)) {
-    message = 'Four of a Kind'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for full house
-  if (isFullHouse(drawnValues)) {
-    message = 'Full House'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for flush
-  if (isFlush(drawnSuits)) {
-    message = 'Flush'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for straight
-  if (isStraight(drawnValues)) {
-    message = 'Straight'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'straightnup'
-  }
-
-  // Check for three of a kind
-  if (isThreeOfAKind(drawnValues)) {
-    message = 'Three of a kind'
-    document.getElementById('dealer-hand').innerHTML = message
-    return '3ofak'
-  }
-
-  // Check for two pair
-  if (isTwoPair(drawnValues)) {
-    message = 'Two Pair'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'twopair'
-  }
-
-  // Check for one pair
-  if (isOnePair(drawnValues)) {
-    message = 'One Pair'
-    document.getElementById('dealer-hand').innerHTML = message
-    return 'pair'
-  }
-  message = `High Card: ${getHighCard(drawnValues)}`
+  if (!isValidInput(drawnValues, drawnSuits)) { return }
+  message = 'Drawing Cards'
   document.getElementById('dealer-hand').innerHTML = message
-  return 'nohand'
+
+  switch (true) {
+    case isFiveOfAKindFlush(drawnValues, drawnSuits):
+      message = 'Five of a Kind Flush'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+    case isRoyalFlush(drawnValues, drawnSuits):
+      message = 'Royal Flush'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isStraightFlush(drawnValues, drawnSuits):
+      message = 'Straight Flush'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isFiveOfAKind(drawnValues):
+      message = 'Five of a Kind'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isFourOfAKind(drawnValues):
+      message = 'Four of a Kind'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isFullHouse(drawnValues):
+      message = 'Full House'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isFlush(drawnSuits):
+      message = 'Flush'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isStraight(drawnValues):
+      message = 'Straight'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'straightnup'
+
+    case isThreeOfAKind(drawnValues):
+      message = 'Three of a kind'
+      document.getElementById('dealer-hand').innerHTML = message
+      return '3ofak'
+
+    case isTwoPair(drawnValues):
+      message = 'Two Pair'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'twopair'
+
+    case isOnePair(drawnValues):
+      message = 'One Pair'
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'pair'
+
+    default:
+      message = `High Card: ${getHighCard(drawnValues)}`
+      document.getElementById('dealer-hand').innerHTML = message
+      return 'nohand'
+  }
 }
 
 // Define a helper function that checks if the input is valid
@@ -441,20 +424,18 @@ function getHighCard (drawnValues) {
 // Test the function with some examples
 
 function bet (key) {
-  console.log(key)
   if (!canBet) return
 
-      if (bets.get(key) === true) {
-        console.log(`bet UNplaced ${key}`)
-        bets.set(key, false)
-      } else { 
-        console.log(`bet placed ${key}`)
-          return bets.set(key, true) }
+  if (bets.get(key) === true) {
+    bets.set(key, false)
+  } else {
+    return bets.set(key, true)
+  }
 }
 
 function placeBets () {
   document.getElementById('dealer-hand').innerHTML = 'Drawing Cards'
-    if (!canBet) return
+  if (!canBet) return
   if (playerMoney === 0) {
     return alert('You have no money to bet!')
   }
@@ -464,76 +445,66 @@ function placeBets () {
     }
   })
   document.getElementById('player-money').textContent = `$${playerMoney}`
-  console.log(bets)
   canBet = false
-  setTimeout((function(){drawCards()}), 1000)
-  setTimeout((function(){payBets();}), 3500)
-  
-  
+  setTimeout(function () { drawCards() }, 1000)
+  setTimeout(function () { payBets() }, 3500)
 }
 
 function payBets () {
-  if (canBet) return;
+  if (canBet) return
   const dealerHand = findPokerHand(drawnValues, drawnSuits)
-  console.log(dealerHand)
   drawnHands.push(dealerHand)
   bets.forEach(function (value, key) {
     if (dealerHand === key) {
       if (dealerHand === 'straightnup') {
-        if(value !== true) return;
-        const straightUpCheck = () => {
-          if (isFiveOfAKindFlush(drawnValues, drawnSuits) === true) {
-            return 'fiveofakindflush'}
-          if (isRoyalFlush(drawnValues, drawnSuits) === true) {
-            return 'royalflush'}
-          else if (isStraightFlush(drawnValues, drawnSuits) === true) {
-            return'straightflush'}
-          else if (isFiveOfAKind(drawnValues, drawnSuits) === true) {
-            return 'fiveofakind'}
-          else if (isFourOfAKind(drawnValues, drawnSuits) === true) {
-            return 'fourofakind'}
-          else if (isFullHouse(drawnValues, drawnSuits) === true) {
-            return 'fullhouse'}
-          else if (isFlush(drawnValues, drawnSuits) === true){
-            return 'flush'}
-          else if (isStraight(drawnValues, drawnSuits) === true){
-            return 'straight'
-            }
+        if (value !== true) return
+        let straightupHandValue = ''
+        switch (true) {
+          case isFiveOfAKindFlush(drawnValues, drawnSuits):
+            straightupHandValue = 'fiveofakindflush'
+            break
+          case isRoyalFlush(drawnValues, drawnSuits):
+            straightupHandValue = 'royalflush'
+            break
+          case isFiveOfAKind(drawnValues):
+            straightupHandValue = 'fiveofakind'
+            break
+          case isFourOfAKind(drawnValues):
+            straightupHandValue = 'fourofakind'
+            break
+          case isFullHouse(drawnValues, drawnSuits):
+            straightupHandValue = 'fullhouse'
+            break
+          case isFlush(drawnValues, drawnSuits):
+            straightupHandValue = 'flush'
+            break
+          case isStraight(drawnValues, drawnSuits):
+            straightupHandValue = 'straight'
+            break
         }
-        straightUpCheck(key)
         straightnup.forEach(function (svalue, skey) {
-          console.log(skey, svalue)
-          if (skey === straightUpCheck(key)){
-            console.log(playerMoney)
+          if (skey === straightupHandValue) {
             playerMoney += svalue
             document.getElementById('betsPaid').innerHTML = `<p>You won with ${message}!</p>`
-            return console.log(`You won with ${skey}!`)
-
-          } 
-          
-          })
-        }
-        else if (value === true) {
-          document.getElementById('betsPaid').innerHTML = `<p>You won with ${message}!</p>`
-          PAYOUTS.forEach(function (pvalue, pkey) {
-            if (pkey === key) {
-              playerMoney += pvalue
-              document.getElementById(pkey).classList.add('btn-success')
-              document.getElementById(pkey).classList.remove('btn-primary', 'active')
-            }
-            if (pkey != key) {
-              document.getElementById(pkey).classList.add('disabled')
-              document.getElementById(pkey).classList.remove('btn-primary', 'active')
-            }
-          })
-          
-          return console.log(`You won with ${key}!`)
-          
-        }
+          }
+        })
+      } else if (value === true) {
+        document.getElementById('betsPaid').innerHTML = `<p>You won with ${message}!</p>`
+        PAYOUTS.forEach(function (pvalue, pkey) {
+          if (pkey === key) {
+            playerMoney += pvalue
+            document.getElementById(pkey).classList.add('btn-success')
+            document.getElementById(pkey).classList.remove('btn-primary', 'active')
+          }
+          if (pkey !== key) {
+            document.getElementById(pkey).classList.add('disabled')
+            document.getElementById(pkey).classList.remove('btn-primary', 'active')
+          }
+        })
       }
-      
     }
-   
+  }
+
   ); document.getElementById('player-money').textContent = `$${playerMoney}`
 
   canBet = true
