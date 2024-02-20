@@ -15,11 +15,9 @@ body{
         border-radius: 25px;
         margin-top: 2rem;
         padding-bottom: 5rem;
-        display: flex;
+        
     }
-    #dealer-cards img {
-        margin-top: 6rem !important;
-    }
+
  }
  @media (min-width: 420px) and (max-width: 767.98px){ 
     #dealer-cards{
@@ -42,6 +40,8 @@ body{
     border-radius: 25px;
     margin-top: 2rem;
     padding-bottom: 5rem;
+    display: flex;
+    flex-wrap:wrap;
     
 }
 #dealer-cards img {
@@ -56,4 +56,25 @@ body{
 
     .hidden{
         display: none !important;
+    }
+
+    .chips{
+        position:relative;
+        text-align: center;
+        color:black
+    }
+    .chips img{
+        width: 100%
+    }
+    .centered{
+        position:absolute;
+        top: 20%;
+        left: 41%;
+    }
+
+    .hundred{
+        position:absolute;
+        top: 20%;
+        left: 35%;
+        color:white;
     }
