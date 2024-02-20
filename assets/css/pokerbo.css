@@ -6,13 +6,43 @@ body{
     color: #ececec !important;
     background-color: #212121 !important;
 }
+
+@media (min-width: 768px) { 
+    #dealer-cards{
+        height:12rem!important;
+        align-items: center!important;
+        justify-content: center;
+        border-radius: 25px;
+        margin-top: 2rem;
+        padding-bottom: 5rem;
+        
+    }
+
+ }
+ @media (min-width: 420px) and (max-width: 767.98px){ 
+    #dealer-cards{
+        height:25rem!important;
+        align-items: center!important;
+        justify-content: center;
+        border-radius: 25px;
+        margin-top: 2rem;
+        padding-bottom: 5rem;
+        
+    }
+    #dealer-cards img {
+        margin-top: 6rem;
+    }
+ }
 #dealer-cards{
-    height:12rem;
+    height: 35rem;
     align-items: center !important;
     justify-content: center;
     border-radius: 25px;
     margin-top: 2rem;
     padding-bottom: 5rem;
+    display: flex;
+    flex-wrap:wrap;
+    
 }
 #dealer-cards img {
     height: 8.75rem;
@@ -20,8 +50,31 @@ body{
     margin: 1rem;
     justify-content: center;
     transition: all 500ms ease-in-out;
+
+   
     }
 
     .hidden{
         display: none !important;
+    }
+
+    .chips{
+        position:relative;
+        text-align: center;
+        color:black
+    }
+    .chips img{
+        width: 100%
+    }
+    .centered{
+        position:absolute;
+        top: 20%;
+        left: 41%;
+    }
+
+    .hundred{
+        position:absolute;
+        top: 20%;
+        left: 35%;
+        color:white;
     }
