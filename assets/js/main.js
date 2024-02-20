@@ -434,31 +434,30 @@ function getHighCard (drawnValues) {
   return drawnValues.reduce((maxValue, value) => value > maxValue ? value : maxValue, drawnValues[0])
 }
 
-function cardsOfSameSuit(drawnSuits) {
-  const counts = new Map();
+function cardsOfSameSuit (drawnSuits) {
+  const counts = new Map()
   for (const suit of drawnSuits) {
-    counts.set(suit, (counts.get(suit) || 0) + 1);
+    counts.set(suit, (counts.get(suit) || 0) + 1)
   }
 
-  console.log('Counts:', counts);
+  console.log('Counts:', counts)
 
-  const payouts = {};
+  const payouts = {}
   for (const [suit, count] of counts) {
     switch (count) {
       case 3:
-        payouts[suit] = 2;
-        break;
+        payouts[suit] = 2
+        break
       case 2:
-        payouts[suit] = 1;
-        break;
+        payouts[suit] = 1
+        break
       default:
-        payouts[suit] = 0;
+        payouts[suit] = 0
     }
   }
-  console.log('Payouts:', payouts);
-  return payouts;
+  console.log('Payouts:', payouts)
+  return payouts
 }
-
 
 function bet (key) {
   if (canBet) {
@@ -477,15 +476,15 @@ function placeBets () {
     }
     return
   }
-  
+
   try {
     BETS.forEach((entry, key) => {
       if (entry && entry.bet) {
         // TODO: Implement different sized bets utilising the chip buttons
         totalBetAmount++
       }
-    });
-    playerMoney -= totalBetAmount;
+    })
+    playerMoney -= totalBetAmount
   } catch (error) {
     console.log(error)
   }
@@ -546,18 +545,18 @@ function payBets () {
         document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
       }
       const badge = document.createElement('span')
-badge.textContent = `+${payout}`
-badge.classList.add('badge', 'bg-success')
-document.getElementById('player-money').appendChild(badge)
-setTimeout(() => badge.remove(), 3000) 
+      badge.textContent = `+${payout}`
+      badge.classList.add('badge', 'bg-success')
+      document.getElementById('player-money').appendChild(badge)
+      setTimeout(() => badge.remove(), 3000)
     }
-BETS.forEach(function (value, key) {
-  if (!value.bet || dealerHand !== key.toString()) {
-    document.getElementById(key).classList.add('disabled');
-  } else {
-    document.getElementById(key).classList.add('btn-success');
-    document.getElementById(key).classList.remove('btn-primary');
-  }
-});
+    BETS.forEach(function (value, key) {
+      if (!value.bet || dealerHand !== key.toString()) {
+        document.getElementById(key).classList.add('disabled')
+      } else {
+        document.getElementById(key).classList.add('btn-success')
+        document.getElementById(key).classList.remove('btn-primary')
+      }
+    })
   })
 }
