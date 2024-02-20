@@ -11,22 +11,40 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="./assets/favicon/site.webmanifest">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./assets/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
   </head>
   <body>
     <div class="container mx-auto">
-      <h1>AceSpectra PokerBo</h1>
+      <div class="d-grid row">
+        <h1>AceSpectra PokerBo</h1>
+        
+      </div>
+
       <audio id="cards-sound">
-        <source src="./assets/cardDraw.ogg" type="audio/ogg">
+        <source src="./assets/cardDraw.ogg" type="audio/ogg" />
         Your browser does not support the audio element.
-    </audio>
-    <audio id="cards-sound">
-      <source src="./assets/cardDraw.ogg" type="audio/ogg">
-      Your browser does not support the audio element.
-  </audio>
+      </audio>
+      <audio id="cards-sound">
+        <source src="./assets/cardDraw.ogg" type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
       <div class="container">
         <div class="row my-auto">
           <div class="d-grid col-6 mx-auto my-auto">
@@ -38,8 +56,10 @@
           </div>
           <div class="d-grid col-6 mx-auto my-auto">
             <button type="button" class="btn btn-outline-secondary">
-              <h2 class="text-white"><span id="player-money" class="badge bg-warning">$50</span> Player
-                Money</h2>
+              <h2 class="text-white">
+                <span id="player-money" class="badge bg-warning">$50</span>
+                Player Money
+              </h2>
             </button>
           </div>
         </div>
@@ -53,36 +73,68 @@
       <div class="d-grid mx-auto gap-2">
         <div class="row my-auto">
           <div class="d-grid gap-2 col-12 mx-auto my-auto">
-            <button type="button" class="btn btn-primary" id="straightnup" onclick="this.classList.toggle('active')">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="straightnup"
+              onclick="this.classList.toggle('active')"
+            >
               Straight 'n' Up
             </button>
           </div>
         </div>
         <div class="row my-auto">
           <div class="d-grid col-6 mx-auto my-auto">
-            <button type="button" class="btn btn-primary" id="twopair" onclick="this.classList.toggle('active')">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="twopair"
+              onclick="this.classList.toggle('active')"
+            >
               Two Pair
             </button>
           </div>
           <div class="d-grid col-6 mx-auto my-auto">
-            <button type="button" class="btn btn-primary" id="3ofak" onclick="this.classList.toggle('active')">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="3ofak"
+              onclick="this.classList.toggle('active')"
+            >
               Three of a Kind
             </button>
           </div>
         </div>
         <div class="row my-auto">
           <div class="d-grid col-6 mx-auto my-auto">
-            <button type="button" class="btn btn-primary" id="pair" onclick="this.classList.toggle('active')">Pair</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="pair"
+              onclick="this.classList.toggle('active')"
+            >
+              Pair
+            </button>
           </div>
           <div class="d-grid col-6 mx-auto">
-            <button type="button" class="btn btn-primary" id="nohand" onclick="this.classList.toggle('active')">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="nohand"
+              onclick="this.classList.toggle('active')"
+            >
               No Hand
             </button>
           </div>
         </div>
         <div class="row my-auto">
           <div class="d-grid col-3 mx-auto">
-            <button type="button" class="btn btn-danger" id="hearts" onclick="this.classList.toggle('active')">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="hearts"
+              onclick="this.classList.toggle('active')"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -98,7 +150,12 @@
             </button>
           </div>
           <div class="d-grid col-3 mx-auto">
-            <button type="button" class="btn btn-light" id="spades" onclick="this.classList.toggle('active','btn-success','btn-light')">
+            <button
+              type="button"
+              class="btn btn-light"
+              id="spades"
+              onclick="this.classList.toggle('active','btn-success','btn-light')"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -114,7 +171,12 @@
             </button>
           </div>
           <div class="d-grid col-3 mx-auto">
-            <button type="button" class="btn btn-danger" id="diamonds" onclick="this.classList.toggle('active','btn-success','btn-danger')">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="diamonds"
+              onclick="this.classList.toggle('active','btn-success','btn-danger')"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -130,7 +192,12 @@
             </button>
           </div>
           <div class="d-grid col-3 mx-auto">
-            <button type="button" class="btn btn-light" id="clubs" onclick="this.classList.toggle('active','btn-success','btn-light')">
+            <button
+              type="button"
+              class="btn btn-light"
+              id="clubs"
+              onclick="this.classList.toggle('active','btn-success','btn-light')"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -170,124 +237,136 @@
             Redraw
           </button>
         </div>
-        <!-- <div class="row">
-          <button
-            type="button"
-            class="btn btn-info btn-lg hidden"
-            id="draw"
-            onclick="this.classList.add('hidden'); document.getElementById('redraw').classList.remove('hidden'); document.getElementById('pay-bets').classList.remove('hidden');  "
-          >
-            Draw Cards
-          </button>
-        </div>
-        <div class="row">
-          <button
-            type="button"
-            class="btn btn-info btn-lg hidden"
-            id="pay-bets"
-            onclick="this.classList.add('active'); document.getElementById('betsHeading').classList.remove('hidden')"
-          >
-            Pay Bets
-          </button>
-        </div> -->
 
         <h2 id="betsHeading" class="hidden">
           Bets Paid: <br /><span id="betsPaid" class="badge bg-success"></span>
         </h2>
         <br />
       </div>
+      <div class="d-grid gap-2 mx-auto">
+        <div class="row">
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$1</button>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$5</button>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$10</button>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$25</button>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$50</button>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-info btn-lg">$100</button>
+          </div>
+        </div>
+        <div class="row"><button
+          type="button"
+          class="btn btn-danger col-12 float-end"
+          id="reset-money"
+        >
+          Reset Money
+        </button></div>
+      </div>
+      <br />
 
-      <h2>Payout Table</h2>
-      <table class="table mb-0 table-dark text-center">
-        <tr>
-          <th colspan="2" scope="row" class="text-center">Straight 'n' Up</th>
-        </tr>
-        <tr>
-          <td>Five of a Kind Flush</td>
-          <td>600 to 1</td>
-        </tr>
-        <tr>
-          <td>Royal Flush</td>
-          <td>500 to 1</td>
-        </tr>
-        <tr>
-          <td>Straight Flush</td>
-          <td>400 to 1</td>
-        </tr>
-        <tr>
-          <td>Five of a Kind</td>
-          <td>300 to 1</td>
-        </tr>
-        <tr>
-          <td>Four of a Kind</td>
-          <td>150 to 1</td>
-        </tr>
-        <tr>
-          <td>Full House</td>
-          <td>100 to 1</td>
-        </tr>
-        <tr>
-          <td>Flush</td>
-          <td>50 to 1</td>
-        </tr>
-        <tr>
-          <td>Straight</td>
-          <td>25 to 1</td>
-        </tr>
-      </table>
-      <br />
-      <table class="table table-dark text-center">
-        <tbody>
-          <thead>
-            <tr>
-              <th scope="col">Hand</th>
-              <th scope="col">Payout</th>
-            </tr>
-          </thead>
+      <div class="container-fluid">
+        <h2>Payout Table</h2>
+        <table class="table mb-0 table-dark text-center">
           <tr>
-            <td>Three of a Kind</td>
-            <td>29 to 1</td>
+            <th colspan="2" scope="row" class="text-center">Straight 'n' Up</th>
           </tr>
           <tr>
-            <td>Two Pair</td>
-            <td>13 to 1</td>
+            <td>Five of a Kind Flush</td>
+            <td>600 to 1</td>
           </tr>
           <tr>
-            <td>Pair</td>
-            <td>1 to 1</td>
+            <td>Royal Flush</td>
+            <td>500 to 1</td>
           </tr>
           <tr>
-            <td>No Hand</td>
-            <td>1 to 1</td>
+            <td>Straight Flush</td>
+            <td>400 to 1</td>
           </tr>
-        </tbody>
-      </table>
-      <br />
-      <table class="table table-dark text-center">
-        <tbody>
-          <thead>
-            <tr>
-              <th colspan="2" class="text-center">Suits</th>
-            </tr>
-          </thead>
           <tr>
-            <td>5 Suits</td>
+            <td>Five of a Kind</td>
+            <td>300 to 1</td>
+          </tr>
+          <tr>
+            <td>Four of a Kind</td>
+            <td>150 to 1</td>
+          </tr>
+          <tr>
+            <td>Full House</td>
+            <td>100 to 1</td>
+          </tr>
+          <tr>
+            <td>Flush</td>
             <td>50 to 1</td>
           </tr>
           <tr>
-            <td>4 Suits</td>
-            <td>5 to 1</td>
+            <td>Straight</td>
+            <td>25 to 1</td>
           </tr>
-          <tr>
-            <td>3 Suits</td>
-            <td>2 to 1</td>
-          </tr>
-          <tr>
-            <td>2 Suits</td>
-            <td>1 to 1</td>
-          </tr>
-        </tbody>
-      </table>
+        </table>
+        <br />
+        <table class="table table-dark text-center">
+          <tbody>
+            <thead>
+              <tr>
+                <th scope="col">Hand</th>
+                <th scope="col">Payout</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>Three of a Kind</td>
+              <td>29 to 1</td>
+            </tr>
+            <tr>
+              <td>Two Pair</td>
+              <td>13 to 1</td>
+            </tr>
+            <tr>
+              <td>Pair</td>
+              <td>1 to 1</td>
+            </tr>
+            <tr>
+              <td>No Hand</td>
+              <td>1 to 1</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <table class="table table-dark text-center">
+          <tbody>
+            <thead>
+              <tr>
+                <th colspan="2" class="text-center">Suits</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>5 Suits</td>
+              <td>50 to 1</td>
+            </tr>
+            <tr>
+              <td>4 Suits</td>
+              <td>5 to 1</td>
+            </tr>
+            <tr>
+              <td>3 Suits</td>
+              <td>2 to 1</td>
+            </tr>
+            <tr>
+              <td>2 Suits</td>
+              <td>1 to 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <script src="./assets/js/main.js" type="module"></script>
