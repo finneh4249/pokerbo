@@ -1,16 +1,14 @@
+// Array of possible values for the cards
 const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace']
+
+// Array of possible suits for the cards
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades']
+
+// Map of different bets with their corresponding properties
 const BETS = new Map([
   ['straightnup', {
-    bet: false,
-    payout: [601,
-      501,
-      401,
-      301,
-      151,
-      101,
-      51,
-      26]
+    bet: false, // boolean indicating if the bet is placed
+    payout: [601, 501, 401, 301, 151, 101, 51, 26] // array of payout values
   }],
   ['twopair', {
     bet: false,
@@ -46,46 +44,68 @@ const BETS = new Map([
   }]
 ])
 
-let message = ''
-let deck
-let canBet = true
-let drawnSuits = []
-let drawnValues = []
+// Initialize variables
+const message = '' // empty string for messages
+let deck // variable to hold the deck of cards
+let canBet = true // boolean indicating if betting is allowed
+let drawnSuits = [] // array to store the suits of drawn cards
+let drawnValues = [] // array to store the values of drawn cards
 
+/**
+ * Function to initialize the game.
+ * It builds the deck of cards, shuffles the deck, and starts the game.
+ */
 window.onload = function () {
   buildDeck()
-  shuffleDeck()
+
   startGame()
 }
 
+/**
+ * Retrieves the player's money from the cookies,
+ * or initializes it to 50 if not present.
+ * @returns {number} The player's money.
+ */
 function getPlayerMoney () {
-  if (!document.cookie) {
+  const cookieObj = Object.fromEntries(
+    document.cookie.split('; ').map(cookie => cookie.split('='))
+  )
+  if (!('playerMoney' in cookieObj)) {
     document.cookie = 'playerMoney=50'
+    return 50
   }
-  const cookies = document.cookie.split('; ')
-  for (const cookie of cookies) {
-    const [name, value] = cookie.split('=')
-    if (name === 'playerMoney') {
-      return parseInt(decodeURIComponent(value))
-    }
-  }
+  return parseInt(cookieObj.playerMoney)
 }
 
 let playerMoney = getPlayerMoney()
 console.log(`Player money: ${playerMoney}`)
 
+/**
+ * Initialize a test deck with five cards, all of the same type.
+ */
 function testDeck () {
   deck = ['ace_of_hearts', 'ace_of_hearts', 'ace_of_hearts', 'ace_of_hearts', 'ace_of_hearts']
 }
+/**
+ * Builds a deck of cards
+ */
 function buildDeck () {
+  // Initialize an empty deck
   deck = []
+
+  // Loop through the number of decks
   for (let d = 0; d < 6; d++) {
-    for (let i = 0; i < SUITS.length; i++) {
-      for (let j = 0; j < VALUES.length; j++) {
-        deck.push(VALUES[j] + '_of_' + SUITS[i])
+    // Loop through the suits
+    for (const suit of SUITS) {
+      // Loop through the values
+      for (const value of VALUES) {
+        // Add the card to the deck
+        deck.push(`${value}_of_${suit}`)
       }
     }
   }
+
+  shuffleDeck()
 }
 function shuffleDeck () {
   for (let i = 0; i < deck.length; i++) {
@@ -96,58 +116,88 @@ function shuffleDeck () {
   }
 }
 
+/**
+ * Start the game by setting up event listeners and initial player money display.
+ */
 function startGame () {
+  // Set up event listeners for each bet element
   BETS.forEach(function (value, key) {
     document.getElementById(key).addEventListener('click', function () { bet(key) })
   })
 
+  // Set up event listener for place bets button
   document.getElementById('place-bets').addEventListener('click', placeBets)
+  // Set up event listener for redraw cards button
   document.getElementById('redraw').addEventListener('click', redrawCards)
+  // Set up event listener for reset money button
   document.getElementById('reset-money').addEventListener('click', resetMoney)
 
+  // Display initial player money
   document.getElementById('player-money').textContent = `$${playerMoney}`
 }
 
+/**
+ * Reset the player's money to 50 and update the displayed player money.
+ */
 function resetMoney () {
   playerMoney = 50
   document.cookie = 'playerMoney=50'
   document.getElementById('player-money').textContent = `$${playerMoney}`
 }
+/**
+ * Extracts the value from a card string and updates the drawn suits and values.
+ * @param {string} card - The card string in the format "value_of_suit".
+ * @returns {number} - The numeric value extracted from the card.
+ */
 function getValue (card) {
-  const data = card.split('_of_')
-  const value = data[0]
-  const suit = data[1]
+  // Extract the value and suit from the card string
+  const [value, suit] = card.split('_of_')
 
-  const pushValue = (value, suit) => {
-    drawnSuits.push(suit)
-    drawnValues.push(value)
-  }
-  pushValue(value, suit)
+  // Update the drawn suits and values
+  drawnSuits.push(suit)
+  drawnValues.push(value)
+
+  // Return the numeric value
   return parseInt(value)
 }
 
+/**
+ * Redraws the cards, resets bets, and prepares for the next round.
+ */
 function redrawCards () {
+  // Rebuild the deck
   buildDeck()
+  // Shuffle the deck
   shuffleDeck()
+  // Iterate through each bet
   BETS.forEach(function (value, key) {
+    // Reset the button appearance
     const element = document.getElementById(key)
     element.classList.remove('active', 'btn-success', 'disabled')
     element.classList.add('btn-primary')
+    // Reset the bet status
     const entry = BETS.get(key)
     entry.bet = false
     BETS.set(key, entry)
   })
-  for (let i = 0; i < 5; i++) {
-    const cardImg = document.querySelector('img')
-    document.getElementById('dealer-cards').removeChild(cardImg)
-  }
+  // Clear the dealer's cards
+  document.getElementById('dealer-cards').innerHTML = ''
+  // Reset the arrays for drawn suits and values
   drawnSuits = []
   drawnValues = []
-  document.getElementById('betsPaid').innerHTML = '<p>None</p>'
+  // Reset the bets paid indicator
+  document.getElementById('betsPaid').textContent = 'None'
+  // Allow betting to start again
   canBet = true
 }
 
+/**
+ * Draws 5 cards for the dealer and displays them one by one with a delay of 500ms between each card.
+ */
 function drawCards () {
+  /**
+   * Plays a sound when a card is drawn.
+   */
   function cardSound () {
     const sound = document.getElementById('cards-sound')
     sound.load()
@@ -156,25 +206,38 @@ function drawCards () {
 
   for (let i = 0; i < 5; i++) {
     const dealer = () => {
-      cardSound()
-      const cardImg = document.createElement('img')
-      cardImg.classList.add('text-center')
       const card = deck.pop()
-      cardImg.src = './assets/images/cards/' + card + '.png'
+      const cardImg = document.createElement('img')
+      cardImg.src = `./assets/images/cards/${card}.png`
       getValue(card)
-      document.getElementById('dealer-cards').append(cardImg)
+      document.getElementById('dealer-cards').appendChild(cardImg)
       document.getElementById('dealer-hand').innerHTML = message
+      cardSound()
     }
     setTimeout(dealer, 500 * i)
   }
 }
 
+/**
+ * Determines the poker hand based on the drawn values and suits.
+ * @param {array} drawnValues - The values of the drawn cards.
+ * @param {array} drawnSuits - The suits of the drawn cards.
+ * @returns {string} - The type of poker hand.
+ */
 function findPokerHand (drawnValues, drawnSuits) {
+  // Get the element with the id 'dealer-hand'
   const element = document.getElementById('dealer-hand')
-  if (!isValidInput(drawnValues, drawnSuits)) { return }
-  message = 'Drawing Cards'
+
+  // Check if the input is valid
+  if (!isValidInput(drawnValues, drawnSuits)) {
+    return
+  }
+
+  // Display 'Drawing Cards' message
+  let message = 'Drawing Cards'
   element.innerHTML = message
 
+  // Determine the type of poker hand and display the message
   switch (true) {
     case isFiveOfAKindFlush(drawnValues, drawnSuits):
       message = 'Five of a Kind Flush'
@@ -184,52 +247,42 @@ function findPokerHand (drawnValues, drawnSuits) {
       message = 'Royal Flush'
       element.innerHTML = message
       return 'straightnup'
-
     case isStraightFlush(drawnValues, drawnSuits):
       message = 'Straight Flush'
       element.innerHTML = message
       return 'straightnup'
-
     case isFiveOfAKind(drawnValues):
       message = 'Five of a Kind'
       element.innerHTML = message
       return 'straightnup'
-
     case isFourOfAKind(drawnValues):
       message = 'Four of a Kind'
       element.innerHTML = message
       return 'straightnup'
-
     case isFullHouse(drawnValues):
       message = 'Full House'
       element.innerHTML = message
       return 'straightnup'
-
     case isFlush(drawnSuits):
       message = 'Flush'
       element.innerHTML = message
       return 'straightnup'
-
     case isStraight(drawnValues):
       message = 'Straight'
       element.innerHTML = message
       return 'straightnup'
-
     case isThreeOfAKind(drawnValues):
       message = 'Three of a kind'
       element.innerHTML = message
       return '3ofak'
-
     case isTwoPair(drawnValues):
       message = 'Two Pair'
       element.innerHTML = message
       return 'twopair'
-
     case isOnePair(drawnValues):
       message = 'One Pair'
       element.innerHTML = message
       return 'pair'
-
     default:
       message = `High Card: ${getHighCard(drawnValues)}`
       element.innerHTML = message
@@ -241,22 +294,15 @@ function isValidInput (drawnValues, drawnSuits) {
   if (drawnValues.length !== 5 || drawnSuits.length !== 5) {
     return false
   }
-  for (const value of drawnValues) {
-    if (!VALUES.includes(value)) {
-      return false
-    }
+
+  const validValues = drawnValues.every(value => VALUES.includes(value))
+  const validSuits = drawnSuits.every(suit => SUITS.includes(suit))
+
+  if (!validValues || !validSuits) {
+    return false
   }
 
-  for (const suit of drawnSuits) {
-    if (!SUITS.includes(suit)) {
-      return false
-    }
-  }
-  const seen = new Set()
-  for (let i = 0; i < 5; i++) {
-    const card = drawnValues[i] + drawnSuits[i]
-    seen.add(card)
-  }
+  const seen = new Set(drawnValues.map((value, index) => value + drawnSuits[index]))
 
   return true
 }
@@ -266,9 +312,9 @@ function isFiveOfAKindFlush (drawnValues, drawnSuits) {
 }
 
 function isRoyalFlush (drawnValues, drawnSuits) {
-  const royalValues = ['ace', 'king', 'queen', 'jack', '10']
+  const royalValues = new Set(['ace', 'king', 'queen', 'jack', '10'])
   for (const value of drawnValues) {
-    if (!royalValues.includes(value)) {
+    if (!royalValues.has(value)) {
       return false
     }
   }
@@ -280,13 +326,13 @@ function isStraightFlush (drawnValues, drawnSuits) {
 }
 
 function isFiveOfAKind (drawnValues) {
-  const counts = {}
+  const counts = new Map()
   for (const value of drawnValues) {
-    counts[value] = (counts[value] || 0) + 1
+    counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const value in counts) {
-    if (counts[value] === 5) {
+  for (const [value, count] of counts) {
+    if (count === 5) {
       return true
     }
   }
@@ -294,13 +340,13 @@ function isFiveOfAKind (drawnValues) {
   return false
 }
 function isFourOfAKind (drawnValues) {
-  const counts = {}
+  const counts = new Map()
   for (const value of drawnValues) {
-    counts[value] = (counts[value] || 0) + 1
+    counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const value in counts) {
-    if (counts[value] === 4) {
+  for (const [value, count] of counts) {
+    if (count === 4) {
       return true
     }
   }
@@ -309,23 +355,12 @@ function isFourOfAKind (drawnValues) {
 }
 
 function isFullHouse (drawnValues) {
-  const counts = {}
-  for (const value of drawnValues) {
-    counts[value] = (counts[value] || 0) + 1
-  }
+  const counts = drawnValues.reduce((acc, value) => {
+    acc[value] = (acc[value] || 0) + 1
+    return acc
+  }, {})
 
-  let three = false
-  let two = false
-  for (const value in counts) {
-    if (counts[value] === 3) {
-      three = true
-    }
-    if (counts[value] === 2) {
-      two = true
-    }
-  }
-
-  return three && two
+  return Object.values(counts).includes(3) && Object.values(counts).includes(2)
 }
 
 function isFlush (drawnSuits) {
@@ -340,29 +375,23 @@ function isFlush (drawnSuits) {
 }
 
 function isStraight (drawnValues) {
-  const indices = drawnValues.map(value => VALUES.indexOf(value))
-  indices.sort((a, b) => a - b)
-
-  if (indices[0] === 0 && indices[1] === 1 && indices[2] === 2 && indices[3] === 3 && indices[4] === 12) {
-    return true
+  const valuesSet = new Set(drawnValues)
+  if (valuesSet.size !== 5) {
+    return false
   }
-  for (let i = 0; i < 4; i++) {
-    if (indices[i] + 1 !== indices[i + 1]) {
-      return false
-    }
-  }
-
-  return true
+  const max = Math.max(...valuesSet)
+  const min = Math.min(...valuesSet)
+  return max - min === 4
 }
 
 function isThreeOfAKind (drawnValues) {
-  const counts = {}
+  const counts = new Map()
   for (const value of drawnValues) {
-    counts[value] = (counts[value] || 0) + 1
+    counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const value in counts) {
-    if (counts[value] === 3) {
+  for (const [value, count] of counts) {
+    if (count === 3) {
       return true
     }
   }
@@ -400,41 +429,39 @@ function isOnePair (drawnValues) {
 }
 
 function getHighCard (drawnValues) {
-  const indices = drawnValues.map(value => VALUES.indexOf(value))
-
-  const maxIndex = Math.max(...indices)
-  return VALUES[maxIndex]
+  return drawnValues.reduce((maxValue, value) => value > maxValue ? value : maxValue, drawnValues[0])
 }
 
 function bet (key) {
-  if (!canBet) return
-
-  const entry = BETS.get(key)
-  if (entry) {
-    entry.bet = !entry.bet
-    BETS.set(key, entry)
+  if (canBet) {
+    const entry = BETS.get(key)
+    if (entry) {
+      entry.bet = !entry.bet
+      BETS.set(key, entry)
+    }
   }
 }
 
 function placeBets () {
-  document.getElementById('dealer-hand').innerHTML = 'Drawing Cards'
-  if (!canBet) return
-  if (playerMoney === 0) {
-    return alert('You have no money to bet!')
+  if (!canBet || playerMoney <= 0) {
+    if (playerMoney === 0) {
+      alert('You have no money to bet!')
+    }
+    return
   }
-  BETS.forEach(function (value, key) {
-    const entry = BETS.get(key)
-    if (entry) {
-      if (entry.bet === true) {
-        playerMoney -= 1
-      }
+  let totalBetAmount = 0
+  BETS.forEach((entry, key) => {
+    if (entry && entry.bet) {
+      // TODO: Implement different sized bets utilising the chip buttons
+      totalBetAmount++
+      playerMoney -= totalBetAmount
     }
   })
   document.getElementById('player-money').textContent = `$${playerMoney}`
   document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
   canBet = false
-  setTimeout(function () { drawCards() }, 1000)
-  setTimeout(function () { payBets() }, 3500)
+  setTimeout(drawCards, 1000)
+  setTimeout(payBets, 3500)
 }
 
 function payBets () {
@@ -444,7 +471,7 @@ function payBets () {
     const betPlaced = BETS.get(key).bet
     const payout = BETS.get(key).payout
 
-    if (dealerHand === key.toString()) {
+    if (dealerHand === key.toString() && betPlaced) {
       if (betPlaced) {
         if (key.toString() === 'straightnup') {
           let straightupHandValue = ''
@@ -481,5 +508,7 @@ function payBets () {
         document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
       }
     }
+    // TODO: Add disabled class to all bets that didn't win and btn-success class to bet that did
+    // TODO: Add a temporary badge to player-money element with class bg-success to show the payout of the bet
   })
 }
