@@ -50,6 +50,7 @@ let deck // variable to hold the deck of cards
 let canBet = true // boolean indicating if betting is allowed
 let drawnSuits = [] // array to store the suits of drawn cards
 let drawnValues = [] // array to store the values of drawn cards
+let totalBetAmount = 0
 
 /**
  * Function to initialize the game.
@@ -433,6 +434,32 @@ function getHighCard (drawnValues) {
   return drawnValues.reduce((maxValue, value) => value > maxValue ? value : maxValue, drawnValues[0])
 }
 
+function cardsOfSameSuit(drawnSuits) {
+  const counts = new Map();
+  for (const suit of drawnSuits) {
+    counts.set(suit, (counts.get(suit) || 0) + 1);
+  }
+
+  console.log('Counts:', counts);
+
+  const payouts = {};
+  for (const [suit, count] of counts) {
+    switch (count) {
+      case 3:
+        payouts[suit] = 2;
+        break;
+      case 2:
+        payouts[suit] = 1;
+        break;
+      default:
+        payouts[suit] = 0;
+    }
+  }
+  console.log('Payouts:', payouts);
+  return payouts;
+}
+
+
 function bet (key) {
   if (canBet) {
     const entry = BETS.get(key)
@@ -450,7 +477,7 @@ function placeBets () {
     }
     return
   }
-  let totalBetAmount = 0
+  
   try {
     BETS.forEach((entry, key) => {
       if (entry && entry.bet) {
@@ -464,6 +491,11 @@ function placeBets () {
   }
   document.getElementById('player-money').textContent = `$${playerMoney}`
   document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
+  const badge = document.createElement('span')
+  badge.textContent = `-${totalBetAmount}`
+  badge.classList.add('badge', 'bg-danger')
+  document.getElementById('player-money').appendChild(badge)
+  setTimeout(() => badge.remove(), 1000)
   canBet = false
   setTimeout(drawCards, 1000)
   setTimeout(payBets, 3500)
@@ -471,6 +503,7 @@ function placeBets () {
 
 function payBets () {
   if (canBet) return
+  console.log(cardsOfSameSuit(drawnSuits))
   const dealerHand = findPokerHand(drawnValues, drawnSuits)
   BETS.forEach(function (value, key) {
     const betPlaced = BETS.get(key).bet
@@ -512,8 +545,19 @@ function payBets () {
         document.getElementById('player-money').textContent = `$${playerMoney}`
         document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
       }
+      const badge = document.createElement('span')
+badge.textContent = `+${payout}`
+badge.classList.add('badge', 'bg-success')
+document.getElementById('player-money').appendChild(badge)
+setTimeout(() => badge.remove(), 3000) 
     }
-    // TODO: Add disabled class to all bets that didn't win and btn-success class to bet that did
-    // TODO: Add a temporary badge to player-money element with class bg-success to show the payout of the bet
+BETS.forEach(function (value, key) {
+  if (!value.bet || dealerHand !== key.toString()) {
+    document.getElementById(key).classList.add('disabled');
+  } else {
+    document.getElementById(key).classList.add('btn-success');
+    document.getElementById(key).classList.remove('btn-primary');
+  }
+});
   })
 }
