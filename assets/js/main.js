@@ -189,6 +189,7 @@ function redrawCards () {
   document.getElementById('betsPaid').textContent = 'None'
   // Allow betting to start again
   canBet = true
+  totalBetAmount = 0
 }
 
 /**
@@ -444,19 +445,23 @@ function bet (key) {
 
 function placeBets () {
   if (!canBet || playerMoney <= 0) {
-    if (playerMoney === 0) {
+    if (playerMoney <= 0) {
       alert('You have no money to bet!')
     }
     return
   }
   let totalBetAmount = 0
-  BETS.forEach((entry, key) => {
-    if (entry && entry.bet) {
-      // TODO: Implement different sized bets utilising the chip buttons
-      totalBetAmount++
-      playerMoney -= totalBetAmount
-    }
-  })
+  try {
+    BETS.forEach((entry, key) => {
+      if (entry && entry.bet) {
+        // TODO: Implement different sized bets utilising the chip buttons
+        totalBetAmount++
+      }
+    });
+    playerMoney -= totalBetAmount;
+  } catch (error) {
+    console.log(error)
+  }
   document.getElementById('player-money').textContent = `$${playerMoney}`
   document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
   canBet = false
