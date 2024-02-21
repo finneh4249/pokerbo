@@ -1,9 +1,9 @@
 const staticPokerBo = 'pokerbo'
 const assets = [
-  '/',
-  '/index.html',
-  'assets/css/pokerbo.css',
-  'assets/js/main.js'
+  '../../',
+  '../../index.html',
+  '../css/pokerbo.css',
+  './main.js'
 ]
 
 self.addEventListener('install', installEvent => {
