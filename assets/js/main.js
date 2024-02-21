@@ -4,6 +4,8 @@ const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', '
 // Array of possible suits for the cards
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades']
 
+let drawnHands = new Map()
+
 // Map of different bets with their corresponding properties
 const BETS = new Map([
   ['straightnup', {
@@ -58,7 +60,6 @@ let totalBetAmount = 0
  */
 window.onload = function () {
   buildDeck()
-
   startGame()
 }
 
@@ -128,8 +129,6 @@ function startGame () {
 
   // Set up event listener for place bets button
   document.getElementById('place-bets').addEventListener('click', placeBets)
-  // Set up event listener for redraw cards button
-  document.getElementById('redraw').addEventListener('click', redrawCards)
   // Set up event listener for reset money button
   document.getElementById('reset-money').addEventListener('click', resetMoney)
 
@@ -187,6 +186,8 @@ function redrawCards () {
   drawnSuits = []
   drawnValues = []
   // Reset the bets paid indicator
+  document.getElementById('betsHeading').classList.add('hidden');
+  document.getElementById('place-bets').classList.remove('disabled');
   document.getElementById('betsPaid').textContent = 'None'
   // Allow betting to start again
   canBet = true
@@ -504,6 +505,8 @@ function payBets () {
   if (canBet) return
   console.log(cardsOfSameSuit(drawnSuits))
   const dealerHand = findPokerHand(drawnValues, drawnSuits)
+  let playerWon = false; // Flag to check if player has won
+
   BETS.forEach(function (value, key) {
     const betPlaced = BETS.get(key).bet
     const payout = BETS.get(key).payout
@@ -511,47 +514,34 @@ function payBets () {
     if (dealerHand === key.toString() && betPlaced) {
       if (betPlaced) {
         if (key.toString() === 'straightnup') {
-          let straightupHandValue = ''
-          switch (true) {
-            case isFiveOfAKindFlush(drawnValues, drawnSuits):
-              straightupHandValue = 0
-              break
-            case isRoyalFlush(drawnValues, drawnSuits):
-              straightupHandValue = 1
-              break
-            case isFiveOfAKind(drawnValues):
-              straightupHandValue = 2
-              break
-            case isFourOfAKind(drawnValues):
-              straightupHandValue = 3
-              break
-            case isFullHouse(drawnValues, drawnSuits):
-              straightupHandValue = 4
-              break
-            case isFlush(drawnValues, drawnSuits):
-              straightupHandValue = 5
-              break
-            case isStraight(drawnValues, drawnSuits):
-              straightupHandValue = 6
-              break
-          }
-
-          console.log(payout[straightupHandValue])
-          document.getElementById('player-money').textContent = `$${playerMoney}`
+          let straightupHandValue = getHandValue(drawnValues, drawnSuits)
           playerMoney += payout[straightupHandValue]
+          document.getElementById('player-money').textContent = `$${playerMoney}`
           document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
+          playerWon = true
         } else { playerMoney += payout }
         document.getElementById('player-money').textContent = `$${playerMoney}`
         document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
+        playerWon = true
       }
       const badge = document.createElement('span')
-      badge.textContent = `+${payout}`
+      badge.textContent = key.toString() === 'straightnup' ? `+${payout[getHandValue(drawnValues, drawnSuits)]}` : `+${payout}`
       badge.classList.add('badge', 'bg-success')
       document.getElementById('player-money').appendChild(badge)
-      setTimeout(() => badge.remove(), 3000)
+      document.getElementById('betsPaid').textContent = message
+      drawnHands.set(message, dealerHand)
+      console.log(drawnHands)
+      setTimeout(() => {
+        badge.remove(),
+      redrawCards()}, 3000)
     }
+
+    if (!playerWon) {
+      setTimeout(redrawCards, 3000)
+    }
+  
     BETS.forEach(function (value, key) {
-      if (!value.bet || dealerHand !== key.toString()) {
+      if (dealerHand !== key.toString()) {
         document.getElementById(key).classList.add('disabled')
       } else {
         document.getElementById(key).classList.add('btn-success')
@@ -559,4 +549,23 @@ function payBets () {
       }
     })
   })
+}
+
+function getHandValue(drawnValues, drawnSuits) {
+  switch (true) {
+    case isFiveOfAKindFlush(drawnValues, drawnSuits):
+      return 0
+    case isRoyalFlush(drawnValues, drawnSuits):
+      return 1
+    case isFiveOfAKind(drawnValues):
+      return 2
+    case isFourOfAKind(drawnValues):
+      return 3
+    case isFullHouse(drawnValues, drawnSuits):
+      return 4
+    case isFlush(drawnValues, drawnSuits):
+      return 5
+    case isStraight(drawnValues, drawnSuits):
+      return 6
+  }
 }
