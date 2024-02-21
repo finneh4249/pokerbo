@@ -71,6 +71,7 @@
       <hr />
       <h2 id="results"></h2>
       <div class="d-grid mx-auto gap-2">
+        
         <div class="row my-auto">
           <div class="d-grid gap-2 col-12 mx-auto my-auto">
             <button
@@ -222,19 +223,9 @@
             type="button"
             class="btn btn-info btn-lg"
             id="place-bets"
-            onclick="this.classList.add('hidden'); document.getElementById('redraw').classList.remove('hidden');"
+            onclick="this.classList.add('disabled'); document.getElementById('betsHeading').classList.remove('hidden');"
           >
             Place Bets
-          </button>
-        </div>
-        <div class="row">
-          <button
-            type="button"
-            class="btn btn-info btn-lg hidden"
-            id="redraw"
-            onclick="this.classList.add('hidden'); document.getElementById('place-bets').classList.remove('hidden'); document.getElementById('betsHeading').classList.add('hidden')"
-          >
-            Redraw
           </button>
         </div>
 
