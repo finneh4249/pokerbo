@@ -1,4 +1,5 @@
-# PokerBo-JS
+# PokerBo-JS <img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;" alt="Karma" src="https://https://i.imgur.com/vIhdcHT.png"> 
+![GitHub top language](https://img.shields.io/github/languages/top/Enroute-Transport/Aometry?color=0072CE&style=for-the-badge)
 
 This is a Javascript implementation of the PokerBo game, a fun and fast-paced variation of the classic Stud Poker game. PokerBo was created by Club Gaming Pty LTD, a fully owned subsidiary of Crown Casino, and used to be a table game at Crown Casino in Melbourne, Australia.
 The PokerBo table was removed from Crown in 2021, however, I always enjoyed playing the game, so I've recreated it in Javascript!
