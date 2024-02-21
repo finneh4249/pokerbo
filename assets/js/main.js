@@ -4,7 +4,7 @@ const CARD_VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'quee
 // Array of possible suits for the cards
 const CARD_SUITS = ['hearts', 'diamonds', 'clubs', 'spades']
 
-let drawnHands = new Map()
+const drawnHands = []; // Array to store the drawn hands
 
 // Map of different bets with their corresponding properties
 const BETS = new Map([
@@ -105,8 +105,8 @@ function buildDeck () {
 /**
  * Shuffles the deck array using the Fisher-Yates algorithm.
  *
- * @param {} 
- * @return {} 
+ * @param {}
+ * @return {}
  */
 function shuffleDeck () {
   for (let i = 0; i < deck.length; i++) {
@@ -173,7 +173,6 @@ function redrawCards () {
     // Reset the button appearance
     const element = document.getElementById(key)
     element.classList.remove('active', 'btn-success', 'disabled')
-    element.classList.add('btn-primary')
     // Reset the bet status
     const entry = BETS.get(key)
     entry.bet = false
@@ -185,8 +184,8 @@ function redrawCards () {
   drawnSuits = []
   drawnValues = []
   // Reset the bets paid indicator
-  document.getElementById('betsHeading').classList.add('hidden');
-  document.getElementById('place-bets').classList.remove('disabled');
+  document.getElementById('betsHeading').classList.add('hidden')
+  document.getElementById('place-bets').classList.remove('disabled')
   document.getElementById('betsPaid').textContent = 'None'
   // Allow betting to start again
   canBet = true
@@ -207,15 +206,15 @@ function drawCards () {
   }
 
   for (let i = 0; i < 5; i++) {
-    const dealer = () => {
-      const card = deck.pop()
-      const cardImg = document.createElement('img')
-      cardImg.src = `./assets/images/cards/${card}.png`
-      getValue(card)
-      document.getElementById('dealer-cards').appendChild(cardImg)
-      document.getElementById('dealer-hand').innerHTML = message
-      cardSound()
-    }
+const dealer = () => {
+  const card = deck.pop()
+  const cardImg = new Image()
+  cardImg.src = `./assets/images/cards/${card}.png`
+  getValue(card)
+  document.getElementById('dealer-cards').appendChild(cardImg)
+  document.getElementById('dealer-hand').innerHTML = message
+  cardSound()
+}
     setTimeout(dealer, 500 * i)
   }
 }
@@ -363,7 +362,7 @@ function isFiveOfAKind (drawnValues) {
     counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const [value, count] of counts) {
+  for (const count of counts) {
     if (count === 5) {
       return true
     }
@@ -383,7 +382,7 @@ function isFourOfAKind (drawnValues) {
     counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const [value, count] of counts) {
+  for (const count of counts) {
     if (count === 4) {
       return true
     }
@@ -452,7 +451,7 @@ function isThreeOfAKind (drawnValues) {
     counts.set(value, (counts.get(value) || 0) + 1)
   }
 
-  for (const [value, count] of counts) {
+  for (const count of counts) {
     if (count === 3) {
       return true
     }
@@ -596,58 +595,58 @@ function placeBets () {
 }
 
 /**
- * Function to pay bets based on the dealer's hand and the player's bets. It updates the player's money, 
- * displays the player's money on the UI, and updates the betsPaid element. It also handles the visual 
- * representation of the bets being paid and updates the displayed dealer hand. 
+ * Function to pay bets based on the dealer's hand and the player's bets. It updates the player's money,
+ * displays the player's money on the UI, and updates the betsPaid element. It also handles the visual
+ * representation of the bets being paid and updates the displayed dealer hand.
  *
  * @param {type} paramName - description of parameter
  * @return {type} description of return value
  */
-function payBets() {
-  if (canBet) return;
-  
-  const dealerHand = findPokerHand(drawnValues, drawnSuits);
-  let playerWon = false; // Flag to check if player has won
+function payBets () {
+  if (canBet) return
+
+  const dealerHand = findPokerHand(drawnValues, drawnSuits)
+  let playerWon = false // Flag to check if player has won
 
   BETS.forEach((value, key) => {
-    const betPlaced = value.bet;
-    const payout = value.payout;
+    const betPlaced = value.bet
+    const payout = value.payout
 
     if (dealerHand === key && betPlaced) {
       if (key === 'straightnup') {
-        let straightupHandValue = getHandValue(drawnValues, drawnSuits);
-        playerMoney += payout[straightupHandValue];
+        const straightupHandValue = getHandValue(drawnValues, drawnSuits)
+        playerMoney += payout[straightupHandValue]
       } else {
-        playerMoney += payout;
+        playerMoney += payout
       }
-      document.getElementById('player-money').textContent = `$${playerMoney}`;
-      document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`;
-      playerWon = true;
+      document.getElementById('player-money').textContent = `$${playerMoney}`
+      document.cookie = `playerMoney=${encodeURIComponent(playerMoney)}`
+      playerWon = true
 
-      const badge = document.createElement('span');
-      badge.textContent = key === 'straightnup' ? `+$${payout[getHandValue(drawnValues, drawnSuits)]}` : `+$${payout}`;
-      badge.classList.add('badge', 'bg-success');
-      document.getElementById('player-money').appendChild(badge);
-      document.getElementById('betsPaid').textContent = message;
-      drawnHands.set(message, dealerHand);
-      console.log(drawnHands);
+      const badge = document.createElement('span')
+      badge.textContent = key === 'straightnup' ? `+$${payout[getHandValue(drawnValues, drawnSuits)]}` : `+$${payout}`
+      badge.classList.add('badge', 'bg-success')
+      document.getElementById('player-money').appendChild(badge)
+      document.getElementById('betsPaid').textContent = message
+      drawnHands.push(dealerHand)
+      console.log(drawnHands)
       setTimeout(() => {
-        badge.remove();
-        redrawCards();
-      }, 3000);
+        badge.remove()
+        redrawCards()
+      }, 3000)
     }
 
     if (!playerWon) {
-      setTimeout(redrawCards, 3000);
+      setTimeout(redrawCards, 3000)
     }
 
     if (dealerHand !== key) {
-      document.getElementById(key).classList.add('disabled');
+      document.getElementById(key).classList.add('disabled')
     } else {
-      document.getElementById(key).classList.add('btn-success');
-      document.getElementById(key).classList.remove('btn-primary');
+      document.getElementById(key).classList.add('btn-success')
+      document.getElementById(key).classList.remove('btn-primary')
     }
-  });
+  })
 }
 
 /**
@@ -657,7 +656,7 @@ function payBets() {
  * @param {array} drawnSuits - The suits of the cards drawn
  * @return {number} The hand value calculated based on the drawn values and suits
  */
-function getHandValue(drawnValues, drawnSuits) {
+function getHandValue (drawnValues, drawnSuits) {
   switch (true) {
     case isFiveOfAKindFlush(drawnValues, drawnSuits):
       return 0
